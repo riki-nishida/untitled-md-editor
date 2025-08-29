@@ -3,5 +3,9 @@
 	"editor.codeActionsOnSave": {
 		// https://biomejs.dev/assist/actions/organize-imports/#how-to-enable-in-your-editor
 		"source.organizeImports.biome": "explicit"
+	},
+	"[rust]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "rust-lang.rust-analyzer"
 	}
 }
