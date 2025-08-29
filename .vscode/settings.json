@@ -1,0 +1,7 @@
+{
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.codeActionsOnSave": {
+		// https://biomejs.dev/assist/actions/organize-imports/#how-to-enable-in-your-editor
+		"source.organizeImports.biome": "explicit"
+	}
+}
