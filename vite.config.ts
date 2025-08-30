@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
@@ -6,6 +7,15 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vite.dev/config/
 export default defineConfig(async () => ({
 	plugins: [react()],
+
+	// Path resolution
+	resolve: {
+		alias: {
+			"@": resolve(__dirname, "./src"),
+			"@/styles": resolve(__dirname, "./src/styles"),
+			"@/components": resolve(__dirname, "./src/components"),
+		},
+	},
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//

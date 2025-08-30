@@ -1,50 +1,52 @@
-import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { Splitter } from "@ark-ui/react/splitter";
 import "./App.css";
 
 function App() {
-	const [greetMsg, setGreetMsg] = useState("");
-	const [name, setName] = useState("");
-
-	async function greet() {
-		// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-		setGreetMsg(await invoke("greet", { name }));
-	}
-
 	return (
-		<main className="container">
-			<h1>Welcome to Tauri + React</h1>
-
-			<div className="row">
-				<a href="https://vite.dev" target="_blank" rel="noopener">
-					<img src="/vite.svg" className="logo vite" alt="Vite logo" />
-				</a>
-				<a href="https://tauri.app" target="_blank" rel="noopener">
-					<img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-				</a>
-				<a href="https://react.dev" target="_blank" rel="noopener">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+		<div className="app-layout">
+			<header className="app-header">
+				<h1 className="app-name">Untitled Markdown Editor</h1>
+			</header>
+			<div className="app-body">
+				<Splitter.Root
+					defaultSize={[25, 75]}
+					orientation="horizontal"
+					className="app-splitter-root"
+					panels={[
+						{ id: "sidebar", minSize: 15, maxSize: 40 },
+						{ id: "main", minSize: 50 },
+					]}
+				>
+					<Splitter.Panel id="sidebar" className="app-sidebar-panel">
+						<aside className="app-sidebar">
+							<h2 className="app-sidebar-header">Files</h2>
+							<div className="app-sidebar-content">
+								{/* TODO:  */}
+								<p>File explorer placeholder</p>
+							</div>
+						</aside>
+					</Splitter.Panel>
+					<Splitter.ResizeTrigger
+						id="sidebar:main"
+						className="app-resize-trigger"
+						aria-label="Resize sidebar"
+					/>
+					<Splitter.Panel id="main" className="app-main-panel">
+						<main className="app-main-content">
+							<div className="app-editor-header">
+								<div className="app-tabs">
+									<span>Untitled.md</span>
+								</div>
+							</div>
+							<div className="app-editor">
+								{/* TODO:  */}
+								<p>Editor placeholder</p>
+							</div>
+						</main>
+					</Splitter.Panel>
+				</Splitter.Root>
 			</div>
-			<p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-			<form
-				className="row"
-				onSubmit={(e) => {
-					e.preventDefault();
-					greet();
-				}}
-			>
-				<input
-					id="greet-input"
-					onChange={(e) => setName(e.currentTarget.value)}
-					placeholder="Enter a name..."
-				/>
-				<button type="submit">Greet</button>
-			</form>
-			<p>{greetMsg}</p>
-		</main>
+		</div>
 	);
 }
 
