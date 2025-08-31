@@ -25,7 +25,10 @@
 		"paths": {
 			"@/*": ["src/*"],
 			"@/styles/*": ["src/styles/*"],
-			"@/components/*": ["src/components/*"]
+			"@/components/*": ["src/components/*"],
+			"@/libs/*": ["src/libs/*"],
+			"@/features/*": ["src/features/*"],
+			"@/types/*": ["src/types/*"]
 		}
 	},
 	"include": ["src"],

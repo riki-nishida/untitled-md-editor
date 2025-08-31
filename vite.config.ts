@@ -14,6 +14,9 @@ export default defineConfig(async () => ({
 			"@": resolve(__dirname, "./src"),
 			"@/styles": resolve(__dirname, "./src/styles"),
 			"@/components": resolve(__dirname, "./src/components"),
+			"@/libs": resolve(__dirname, "./src/libs"),
+			"@/features": resolve(__dirname, "./src/features"),
+			"@/types": resolve(__dirname, "./src/types"),
 		},
 	},
 
