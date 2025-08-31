@@ -1,0 +1,64 @@
+.branch {
+	width: 100%;
+}
+
+.branch-control {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 2px 8px;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.1s;
+	min-height: 28px;
+}
+
+.branch-control:hover {
+	background-color: var(--color-hover, #f5f5f5);
+}
+
+.branch-indicator {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	transition: transform 0.2s;
+}
+
+.branch-indicator[data-state="open"] {
+	transform: rotate(90deg);
+}
+
+.folder-icon-closed,
+.folder-icon-open {
+	color: var(--color-icon, #666);
+	flex-shrink: 0;
+}
+
+.folder-icon-closed {
+	display: block;
+}
+
+.folder-icon-open {
+	display: none;
+}
+
+[data-state="open"] .folder-icon-closed {
+	display: none;
+}
+
+[data-state="open"] .folder-icon-open {
+	display: block;
+}
+
+.branch-text {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 14px;
+}
+
+.branch-content {
+	padding-left: 20px;
+}

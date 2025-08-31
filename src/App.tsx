@@ -1,7 +1,17 @@
 import { Splitter } from "@ark-ui/react/splitter";
+import { useState } from "react";
 import "./App.css";
+import { FileExplorer } from "@/features/file-explorer";
 
 function App() {
+	const [selectedFile, setSelectedFile] = useState<string | null>(null);
+	const [fileContent, setFileContent] = useState<string>("");
+
+	const handleFileSelect = (filePath: string, content: string) => {
+		setSelectedFile(filePath);
+		setFileContent(content);
+	};
+
 	return (
 		<div className="app-layout">
 			<header className="app-header">
@@ -21,8 +31,7 @@ function App() {
 						<aside className="app-sidebar">
 							<h2 className="app-sidebar-header">Files</h2>
 							<div className="app-sidebar-content">
-								{/* TODO:  */}
-								<p>File explorer placeholder</p>
+								<FileExplorer onFileSelect={handleFileSelect} />
 							</div>
 						</aside>
 					</Splitter.Panel>
@@ -35,12 +44,16 @@ function App() {
 						<main className="app-main-content">
 							<div className="app-editor-header">
 								<div className="app-tabs">
-									<span>Untitled.md</span>
+									{selectedFile && <span>{selectedFile.split("/").pop()}</span>}
 								</div>
 							</div>
 							<div className="app-editor">
-								{/* TODO:  */}
-								<p>Editor placeholder</p>
+								{fileContent && (
+									// TODO: edtior
+									<pre style={{ padding: "20px", whiteSpace: "pre-wrap" }}>
+										{fileContent}
+									</pre>
+								)}
 							</div>
 						</main>
 					</Splitter.Panel>

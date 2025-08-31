@@ -1,0 +1,55 @@
+.context-trigger {
+	all: unset;
+	display: contents;
+}
+
+.context-menu {
+	background: var(--bg-primary);
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	padding: 4px 0;
+	min-width: 150px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	z-index: 1000;
+}
+
+.context-menu-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 12px;
+	font-size: var(--font-size-sm);
+	cursor: pointer;
+	color: var(--text-primary);
+	background: transparent;
+	border: none;
+	width: 100%;
+	text-align: left;
+}
+
+.context-menu-item:hover {
+	background-color: var(--sidebar-hover);
+}
+
+.context-menu-item[data-highlighted] {
+	background-color: var(--sidebar-hover);
+}
+
+.context-menu-item[data-disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.context-menu-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+}
+
+.context-menu-separator {
+	height: 1px;
+	background-color: var(--border-color);
+	margin: 4px 0;
+}
