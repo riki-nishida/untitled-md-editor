@@ -17,6 +17,7 @@
 		"@ark-ui/react": "^5.22.0",
 		"@tauri-apps/api": "^2",
 		"@tauri-apps/plugin-opener": "^2",
+		"clsx": "^2.1.1",
 		"lucide-react": "^0.542.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0"

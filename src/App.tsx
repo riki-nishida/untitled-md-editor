@@ -1,15 +1,22 @@
 import { Splitter } from "@ark-ui/react/splitter";
-import { useState } from "react";
 import "./App.css";
 import { FileExplorer } from "@/features/file-explorer";
+import { FileTabs } from "@/features/file-tabs";
+import { useTabs } from "@/features/file-tabs/hooks/use-tabs";
 
 function App() {
-	const [selectedFile, setSelectedFile] = useState<string | null>(null);
-	const [fileContent, setFileContent] = useState<string>("");
+	const { tabs, activeTab, addTab, removeTab, setActiveTab } = useTabs();
 
 	const handleFileSelect = (filePath: string, content: string) => {
-		setSelectedFile(filePath);
-		setFileContent(content);
+		addTab(filePath, content);
+	};
+
+	const handleTabSelect = (tabId: string) => {
+		setActiveTab(tabId);
+	};
+
+	const handleTabClose = (tabId: string) => {
+		removeTab(tabId);
 	};
 
 	return (
@@ -42,16 +49,16 @@ function App() {
 					/>
 					<Splitter.Panel id="main" className="app-main-panel">
 						<main className="app-main-content">
-							<div className="app-editor-header">
-								<div className="app-tabs">
-									{selectedFile && <span>{selectedFile.split("/").pop()}</span>}
-								</div>
-							</div>
+							<FileTabs
+								tabs={tabs}
+								onTabSelect={handleTabSelect}
+								onTabClose={handleTabClose}
+							/>
 							<div className="app-editor">
-								{fileContent && (
+								{activeTab && (
 									// TODO: edtior
 									<pre style={{ padding: "20px", whiteSpace: "pre-wrap" }}>
-										{fileContent}
+										{activeTab.content}
 									</pre>
 								)}
 							</div>

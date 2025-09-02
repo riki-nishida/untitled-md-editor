@@ -1,0 +1,39 @@
+.tab-list-empty {
+	display: flex;
+	align-items: center;
+	height: 35px;
+	padding: 0 12px;
+	color: var(--text-secondary);
+	font-size: 13px;
+}
+
+.tab-list-empty-message {
+	color: var(--text-secondary);
+}
+
+.tab-list {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 35px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+	background: var(--bg-secondary);
+	border-bottom: 1px solid var(--border-primary);
+	padding: 0;
+	min-height: 35px;
+}
+
+.tab-list::-webkit-scrollbar {
+	height: 3px;
+}
+
+.tab-list::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.tab-list::-webkit-scrollbar-thumb {
+	background-color: var(--border-primary);
+	border-radius: 3px;
+}
