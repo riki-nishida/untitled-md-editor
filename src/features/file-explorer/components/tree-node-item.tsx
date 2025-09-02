@@ -11,7 +11,6 @@ type Props = {
 export const TreeNodeItem = ({ node }: Props) => {
 	return (
 		<TreeView.Item className={styles.item}>
-			<TreeView.ItemIndicator className={styles["item-indicator"]} />
 			<File size={16} className={styles["file-icon"]} />
 			<TreeView.ItemText className={styles["item-text"]}>
 				{node.name}
