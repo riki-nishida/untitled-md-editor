@@ -2,7 +2,7 @@ import { TreeView } from "@ark-ui/react/tree-view";
 import { useMemo } from "react";
 import { ContextMenu } from "@/components/context-menu/context-menu";
 import type { FileItem } from "@/types/file";
-import { getContextMenuItems } from "./context-menu-config";
+import { getContextMenuItems } from "../context-menu/context-menu-config";
 import { TreeNodeBranch } from "./tree-node-branch";
 import { TreeNodeItem } from "./tree-node-item";
 

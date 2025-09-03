@@ -1,5 +1,5 @@
 import { TreeView } from "@ark-ui/react/tree-view";
-import { TreeNode } from "./components/tree-node";
+import { TreeNode } from "./components/tree/tree-node";
 import { useFileExplorer } from "./hooks/use-file-explorer";
 import styles from "./styles.module.css";
 

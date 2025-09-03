@@ -1,7 +1,7 @@
 import { TreeView } from "@ark-ui/react/tree-view";
 import { File } from "lucide-react";
 import type { FileItem } from "@/types/file";
-import { formatFileSize } from "../utils/format-file-size";
+import { formatFileSize } from "../../utils/format-file-size";
 import styles from "./tree-node-item.module.css";
 
 type Props = {
