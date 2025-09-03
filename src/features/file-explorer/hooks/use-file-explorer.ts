@@ -1,40 +1,22 @@
 import type { TreeView } from "@ark-ui/react";
-import { useCallback, useMemo } from "react";
-import {
-	openFolderDialog,
-	readFileContent,
-	readFolderContents,
-} from "@/libs/file";
+import { useCallback, useEffect, useMemo } from "react";
+import { useWorkspaceContext } from "@/contexts/workspace-context";
+import { useTabs } from "@/features/file-tabs/hooks/use-tabs";
+import { readFileContent, readFolderContents } from "@/libs/file";
 import type { FileItem } from "@/types/file";
 import { createFileTreeCollection } from "../utils/tree-transforms";
 import { useFileTreeState } from "./use-file-tree-state";
 
-type Params = {
-	onFileSelect: (filePath: string, content: string) => void;
-};
+export const useFileExplorer = () => {
+	const { workspacePath } = useWorkspaceContext();
+	const { addTab } = useTabs();
 
-export const useFileExplorer = ({ onFileSelect }: Params) => {
 	const { state, dispatch } = useFileTreeState();
 
 	const collection = useMemo(
 		() => createFileTreeCollection(state.treeData, state.folderContents),
 		[state.treeData, state.folderContents],
 	);
-
-	const handleOpenFolder = useCallback(async () => {
-		const folderPath = await openFolderDialog();
-		if (!folderPath) return;
-
-		const contents = await readFolderContents(folderPath);
-		dispatch({ type: "INIT_TREE", path: folderPath, contents });
-	}, [dispatch]);
-
-	const handleRefresh = useCallback(async () => {
-		if (!state.rootPath) return;
-
-		const contents = await readFolderContents(state.rootPath);
-		dispatch({ type: "INIT_TREE", path: state.rootPath, contents });
-	}, [state.rootPath, dispatch]);
 
 	const handleExpandedChange = useCallback(
 		async (details: TreeView.ExpandedChangeDetails<FileItem>) => {
@@ -54,16 +36,25 @@ export const useFileExplorer = ({ onFileSelect }: Params) => {
 			if (selectedItem.is_directory || !selectedItem) return;
 
 			const content = await readFileContent(selectedItem.path);
-			onFileSelect(selectedItem.path, content);
+			addTab(selectedItem.path, content);
 		},
-		[onFileSelect],
+		[addTab],
 	);
+
+	// 外部からworkspacePathが変更された時にツリーを更新
+	useEffect(() => {
+		const loadExternalFolder = async () => {
+			if (workspacePath && workspacePath !== state.rootPath) {
+				const contents = await readFolderContents(workspacePath);
+				dispatch({ type: "INIT_TREE", path: workspacePath, contents });
+			}
+		};
+
+		loadExternalFolder();
+	}, [workspacePath, state.rootPath, dispatch]);
 
 	return {
 		collection,
-		rootPath: state.rootPath,
-		onOpenFolder: handleOpenFolder,
-		onRefresh: handleRefresh,
 		onExpandedChange: handleExpandedChange,
 		onSelectionChange: handleSelectionChange,
 	};

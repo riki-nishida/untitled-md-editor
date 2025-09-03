@@ -1,32 +1,28 @@
 import { TreeView } from "@ark-ui/react/tree-view";
+import {
+	NewFileButton,
+	NewFolderButton,
+	RefreshButton,
+} from "./components/action-buttons";
 import { TreeNode } from "./components/tree/tree-node";
 import { useFileExplorer } from "./hooks/use-file-explorer";
 import styles from "./styles.module.css";
 
-type Props = {
-	onFileSelect: (filePath: string, content: string) => void;
-};
-
-export const FileExplorer = ({ onFileSelect }: Props) => {
-	const {
-		rootPath,
-		collection,
-		onExpandedChange,
-		onOpenFolder,
-		onSelectionChange,
-	} = useFileExplorer({ onFileSelect });
+export const FileExplorer = () => {
+	const { collection, onExpandedChange, onSelectionChange } = useFileExplorer();
 
 	return (
 		<div className={styles["file-explorer"]}>
 			<div className={styles.header}>
-				<button
-					type="button"
-					onClick={onOpenFolder}
-					className={styles["open-folder-btn"]}
-				>
-					open folder
-				</button>
-				{rootPath && <p className={styles["current-path"]}>{rootPath}</p>}
+				<div className={styles["header-title"]}>
+					<span>Files</span>
+					<div className={styles["header-actions"]}>
+						{/* TODO:  */}
+						<NewFileButton onNewFile={() => {}} />
+						<NewFolderButton onNewFolder={() => {}} />
+						<RefreshButton onRefresh={() => {}} />
+					</div>
+				</div>
 			</div>
 			<div className={styles["tree-container"]}>
 				{collection.rootNode.children &&

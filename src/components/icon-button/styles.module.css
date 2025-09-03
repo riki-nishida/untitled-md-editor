@@ -1,0 +1,33 @@
+.icon-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 3px;
+	color: var(--color-text-secondary);
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.icon-button:hover {
+	background-color: var(--color-bg-secondary);
+	color: var(--color-text-primary);
+}
+
+.icon-button:active {
+	background-color: var(--color-bg-tertiary);
+}
+
+.icon-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.icon-button:disabled:hover {
+	background: none;
+	color: var(--color-text-secondary);
+}

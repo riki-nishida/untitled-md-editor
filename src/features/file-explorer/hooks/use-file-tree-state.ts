@@ -35,7 +35,9 @@ function fileTreeReducer(
 			return {
 				rootPath: action.path,
 				treeData: action.contents,
-				folderContents: {},
+				folderContents: {
+					[action.path]: action.contents,
+				},
 			};
 		case "SET_FOLDER_CONTENTS":
 			return {

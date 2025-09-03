@@ -4,11 +4,12 @@ import styles from "./styles.module.css";
 
 type Props = {
 	tab: FileTab;
+	isActive: boolean;
 	onSelect: (tabId: string) => void;
 	onClose: (tabId: string) => void;
 };
 
-export const TabItem = ({ tab, onSelect, onClose }: Props) => {
+export const TabItem = ({ tab, isActive, onSelect, onClose }: Props) => {
 	const handleClose = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		onClose(tab.id);
@@ -18,7 +19,7 @@ export const TabItem = ({ tab, onSelect, onClose }: Props) => {
 		<button
 			type="button"
 			className={cx(styles["tab-item"], {
-				[styles["tab-item-active"]]: tab.isActive,
+				[styles["tab-item-active"]]: isActive,
 			})}
 			onClick={() => onSelect(tab.id)}
 			title={tab.filePath}

@@ -6,45 +6,33 @@
 }
 
 .header {
-	padding: 12px;
-	border-bottom: 1px solid var(--color-border);
-	background-color: var(--bg-secondary);
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 	gap: 8px;
 }
 
-.open-folder-btn {
-	padding: 6px 12px;
-	background: var(--color-primary);
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 14px;
-	transition: background-color 0.2s;
+.header-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	margin: 0;
+	color: var(--text-secondary);
+	padding: var(--spacing-md) var(--spacing-lg);
+	border-bottom: 1px solid var(--border-primary);
 }
 
-.open-folder-btn:hover {
-	background: var(--color-primary-hover);
-}
-
-.open-folder-btn:active {
-	transform: translateY(1px);
-}
-
-.current-path {
-	font-size: 12px;
-	color: var(--color-text-secondary);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.header-actions {
+	display: flex;
+	gap: 4px;
 }
 
 .tree-container {
 	flex: 1;
 	overflow-y: auto;
 	overflow-x: hidden;
+	padding: var(--spacing-lg);
 }
 
 .tree-root {

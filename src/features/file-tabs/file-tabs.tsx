@@ -1,17 +1,12 @@
+import { useWorkspaceContext } from "@/contexts/workspace-context";
 import { TabItem } from "./components/tab-item/tab-item";
+import { useTabs } from "./hooks/use-tabs";
 import styles from "./styles.module.css";
-import type { FileTab } from "./types/tab";
 
-type Props = {
-	tabs: FileTab[];
-	onTabSelect: (tabId: string) => void;
-	onTabClose: (tabId: string) => void;
-};
+export const FileTabs = () => {
+	const { tabs, removeTab, setActiveTab } = useTabs();
 
-export const FileTabs = ({ tabs, onTabSelect, onTabClose }: Props) => {
-	const handleTabClose = (tabId: string) => {
-		onTabClose(tabId);
-	};
+	const { currentPath } = useWorkspaceContext();
 
 	if (tabs.length === 0) {
 		return (
@@ -27,8 +22,9 @@ export const FileTabs = ({ tabs, onTabSelect, onTabClose }: Props) => {
 				<TabItem
 					key={tab.id}
 					tab={tab}
-					onSelect={onTabSelect}
-					onClose={handleTabClose}
+					isActive={tab.filePath === currentPath}
+					onSelect={setActiveTab}
+					onClose={removeTab}
 				/>
 			))}
 		</div>
