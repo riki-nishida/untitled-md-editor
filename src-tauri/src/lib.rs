@@ -18,7 +18,11 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             dialog::open_folder_dialog,
             file::read_folder_contents,
-            file::read_file_content
+            file::read_file_content,
+            file::create_file,
+            file::create_folder,
+            file::rename_item,
+            file::delete_item
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

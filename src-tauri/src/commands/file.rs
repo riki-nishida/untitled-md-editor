@@ -19,3 +19,36 @@ pub async fn read_file_content(file_path: String) -> Result<String, String> {
         .await
         .map_err(|e: AppError| e.to_string())
 }
+
+/// Creates a new file with optional initial content.
+#[tauri::command]
+pub async fn create_file(file_path: String, content: Option<String>) -> Result<(), String> {
+    FileService::create_file(file_path, content)
+        .await
+        .map_err(|e: AppError| e.to_string())
+}
+
+/// Creates a new folder.
+#[tauri::command]
+pub async fn create_folder(folder_path: String) -> Result<(), String> {
+    FileService::create_folder(folder_path)
+        .await
+        .map_err(|e: AppError| e.to_string())
+}
+
+/// Renames a file or folder.
+/// Returns the new path of the renamed item.
+#[tauri::command]
+pub async fn rename_item(old_path: String, new_name: String) -> Result<String, String> {
+    FileService::rename_item(old_path, new_name)
+        .await
+        .map_err(|e: AppError| e.to_string())
+}
+
+/// Deletes a file or folder.
+#[tauri::command]
+pub async fn delete_item(item_path: String) -> Result<(), String> {
+    FileService::delete_item(item_path)
+        .await
+        .map_err(|e: AppError| e.to_string())
+}

@@ -24,6 +24,18 @@ pub enum AppError {
 
     #[error("Task join error: {0}")]
     TaskJoinError(String),
+
+    #[error("File already exists: {0}")]
+    FileAlreadyExists(String),
+
+    #[error("Invalid file name: {0}")]
+    InvalidFileName(String),
+
+    #[error("Permission denied: {0}")]
+    PermissionDenied(String),
+
+    #[error("Item not found: {0}")]
+    ItemNotFound(String),
 }
 
 impl From<AppError> for String {

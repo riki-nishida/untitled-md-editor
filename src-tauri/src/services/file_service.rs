@@ -3,7 +3,7 @@ use crate::errors::AppError;
 use crate::models::FileItem;
 use crate::utils::{is_markdown_file, is_supported_file};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Service for handling file system operations.
 pub struct FileService;
@@ -108,5 +108,130 @@ impl FileService {
         }
 
         fs::read_to_string(path).map_err(AppError::from)
+    }
+
+    /// Creates a new file with optional initial content.
+    pub async fn create_file(file_path: String, content: Option<String>) -> Result<(), AppError> {
+        tokio::task::spawn_blocking(move || Self::create_file_sync(file_path, content))
+            .await
+            .map_err(|e| AppError::TaskJoinError(e.to_string()))?
+    }
+
+    fn create_file_sync(file_path: String, content: Option<String>) -> Result<(), AppError> {
+        let path = Path::new(&file_path);
+
+        if path.exists() {
+            return Err(AppError::FileAlreadyExists(file_path));
+        }
+
+        if let Some(file_name) = path.file_name() {
+            let name = file_name.to_string_lossy();
+            if name.is_empty() || name.starts_with('.') {
+                return Err(AppError::InvalidFileName(name.to_string()));
+            }
+        } else {
+            return Err(AppError::InvalidFileName(file_path));
+        }
+
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+
+        let content = content.unwrap_or_else(|| String::from(""));
+        fs::write(path, content)?;
+
+        Ok(())
+    }
+
+    /// Creates a new folder.
+    pub async fn create_folder(folder_path: String) -> Result<(), AppError> {
+        tokio::task::spawn_blocking(move || Self::create_folder_sync(folder_path))
+            .await
+            .map_err(|e| AppError::TaskJoinError(e.to_string()))?
+    }
+
+    fn create_folder_sync(folder_path: String) -> Result<(), AppError> {
+        let path = Path::new(&folder_path);
+
+        if path.exists() {
+            return Err(AppError::FileAlreadyExists(folder_path));
+        }
+
+        if let Some(folder_name) = path.file_name() {
+            let name = folder_name.to_string_lossy();
+            if name.is_empty() || name.starts_with('.') {
+                return Err(AppError::InvalidFileName(name.to_string()));
+            }
+        } else {
+            return Err(AppError::InvalidFileName(folder_path));
+        }
+
+        fs::create_dir_all(path)?;
+
+        Ok(())
+    }
+
+    /// Renames a file or folder.
+    pub async fn rename_item(old_path: String, new_name: String) -> Result<String, AppError> {
+        tokio::task::spawn_blocking(move || Self::rename_item_sync(old_path, new_name))
+            .await
+            .map_err(|e| AppError::TaskJoinError(e.to_string()))?
+    }
+
+    fn rename_item_sync(old_path: String, new_name: String) -> Result<String, AppError> {
+        let old_path = Path::new(&old_path);
+
+        if !old_path.exists() {
+            return Err(AppError::ItemNotFound(
+                old_path.to_string_lossy().to_string(),
+            ));
+        }
+
+        if new_name.is_empty()
+            || new_name.starts_with('.')
+            || new_name.contains('/')
+            || new_name.contains('\\')
+        {
+            return Err(AppError::InvalidFileName(new_name));
+        }
+
+        let new_path = if let Some(parent) = old_path.parent() {
+            parent.join(&new_name)
+        } else {
+            PathBuf::from(&new_name)
+        };
+
+        if new_path.exists() {
+            return Err(AppError::FileAlreadyExists(
+                new_path.to_string_lossy().to_string(),
+            ));
+        }
+
+        fs::rename(old_path, &new_path)?;
+
+        Ok(new_path.to_string_lossy().to_string())
+    }
+
+    /// Deletes a file or folder.
+    pub async fn delete_item(item_path: String) -> Result<(), AppError> {
+        tokio::task::spawn_blocking(move || Self::delete_item_sync(item_path))
+            .await
+            .map_err(|e| AppError::TaskJoinError(e.to_string()))?
+    }
+
+    fn delete_item_sync(item_path: String) -> Result<(), AppError> {
+        let path = Path::new(&item_path);
+
+        if !path.exists() {
+            return Err(AppError::ItemNotFound(item_path));
+        }
+
+        if path.is_dir() {
+            fs::remove_dir_all(path)?;
+        } else {
+            fs::remove_file(path)?;
+        }
+
+        Ok(())
     }
 }
