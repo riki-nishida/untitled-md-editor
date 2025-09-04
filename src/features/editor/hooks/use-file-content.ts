@@ -1,27 +1,20 @@
-import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
-import { useWorkspaceContext } from "@/contexts/workspace-context";
+import { useEditorStore } from "@/stores";
 
 export const useFileContent = () => {
-	const { currentPath } = useWorkspaceContext();
-
+	const { activeFilePath, fileContents } = useEditorStore();
 	const [content, setContent] = useState("");
 
 	useEffect(() => {
-		if (!currentPath) {
+		if (!activeFilePath) {
 			setContent("");
 			return;
 		}
 
-		invoke<string>("read_file_content", { filePath: currentPath })
-			.then((data) => {
-				setContent(data);
-			})
-			.catch((err) => {
-				console.error("Failed to read file:", err);
-				setContent("");
-			});
-	}, [currentPath]);
+		const cachedContent = fileContents.get(activeFilePath);
+		if (!cachedContent) return;
+		setContent(cachedContent);
+	}, [activeFilePath, fileContents]);
 
 	return { content };
 };

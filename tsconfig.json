@@ -28,6 +28,7 @@
 			"@/components/*": ["src/components/*"],
 			"@/libs/*": ["src/libs/*"],
 			"@/features/*": ["src/features/*"],
+			"@/stores/*": ["src/stores/*"],
 			"@/types/*": ["src/types/*"]
 		}
 	},

@@ -1,33 +1,67 @@
 import type { TreeView } from "@ark-ui/react";
-import { useCallback, useEffect, useMemo } from "react";
-import { useWorkspaceContext } from "@/contexts/workspace-context";
-import { useTabs } from "@/features/file-tabs/hooks/use-tabs";
+import { useCallback, useEffect, useState } from "react";
 import { readFileContent, readFolderContents } from "@/libs/file";
-import type { FileItem } from "@/types/file";
+import { useEditorStore } from "@/stores";
+import type { FileItem, FolderContents } from "@/types/file";
 import { createFileTreeCollection } from "../utils/tree-transforms";
-import { useFileTreeState } from "./use-file-tree-state";
 
 export const useFileExplorer = () => {
-	const { workspacePath } = useWorkspaceContext();
-	const { addTab } = useTabs();
+	const {
+		workspacePath,
+		fileContents,
+		openFilePaths,
+		setFileContent,
+		setOpenFilePaths,
+		setActiveFilePath,
+	} = useEditorStore();
 
-	const { state, dispatch } = useFileTreeState();
+	const [rootFolderContents, setRootFolderContents] = useState<FolderContents>(
+		[],
+	);
+	const [expandedFolders, setExpandedFolders] = useState<
+		Record<string, FolderContents>
+	>({});
 
-	const collection = useMemo(
-		() => createFileTreeCollection(state.treeData, state.folderContents),
-		[state.treeData, state.folderContents],
+	const collection = createFileTreeCollection(
+		rootFolderContents,
+		expandedFolders,
 	);
 
 	const handleExpandedChange = useCallback(
 		async (details: TreeView.ExpandedChangeDetails<FileItem>) => {
 			for (const path of details.expandedValue) {
-				if (state.folderContents[path]) return;
-
 				const contents = await readFolderContents(path);
-				dispatch({ type: "SET_FOLDER_CONTENTS", path, contents });
+				setExpandedFolders((prev) => ({
+					...prev,
+					[path]: contents,
+				}));
 			}
 		},
-		[state.folderContents, dispatch],
+		[],
+	);
+
+	const openFile = useCallback(
+		async (path: string) => {
+			if (!fileContents.has(path)) {
+				const content = await readFileContent(path);
+				setFileContent(path, content);
+			}
+
+			if (openFilePaths.includes(path)) {
+				setActiveFilePath(path);
+				return;
+			}
+
+			setOpenFilePaths([...openFilePaths, path]);
+			setActiveFilePath(path);
+		},
+		[
+			fileContents,
+			openFilePaths,
+			setFileContent,
+			setOpenFilePaths,
+			setActiveFilePath,
+		],
 	);
 
 	const handleSelectionChange = useCallback(
@@ -35,23 +69,22 @@ export const useFileExplorer = () => {
 			const selectedItem = details.selectedNodes[0];
 			if (selectedItem.is_directory || !selectedItem) return;
 
-			const content = await readFileContent(selectedItem.path);
-			addTab(selectedItem.path, content);
+			await openFile(selectedItem.path);
 		},
-		[addTab],
+		[openFile],
 	);
 
-	// 外部からworkspacePathが変更された時にツリーを更新
 	useEffect(() => {
-		const loadExternalFolder = async () => {
-			if (workspacePath && workspacePath !== state.rootPath) {
+		const loadWorkspaceFolder = async () => {
+			if (workspacePath) {
 				const contents = await readFolderContents(workspacePath);
-				dispatch({ type: "INIT_TREE", path: workspacePath, contents });
+				setRootFolderContents(contents);
+				setExpandedFolders({ [workspacePath]: contents });
 			}
 		};
 
-		loadExternalFolder();
-	}, [workspacePath, state.rootPath, dispatch]);
+		loadWorkspaceFolder();
+	}, [workspacePath]);
 
 	return {
 		collection,

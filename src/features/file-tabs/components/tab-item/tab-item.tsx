@@ -1,19 +1,15 @@
 import { clsx as cx } from "clsx";
-import type { FileTab } from "../../types/tab";
 import styles from "./styles.module.css";
 
 type Props = {
-	tab: FileTab;
+	filePath: string;
 	isActive: boolean;
-	onSelect: (tabId: string) => void;
-	onClose: (tabId: string) => void;
+	onSelect: (path: string) => void;
+	onClose: (path: string) => void;
 };
 
-export const TabItem = ({ tab, isActive, onSelect, onClose }: Props) => {
-	const handleClose = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		onClose(tab.id);
-	};
+export const TabItem = ({ filePath, isActive, onSelect, onClose }: Props) => {
+	const fileName = filePath.split("/").pop() || "Untitled";
 
 	return (
 		<button
@@ -21,19 +17,16 @@ export const TabItem = ({ tab, isActive, onSelect, onClose }: Props) => {
 			className={cx(styles["tab-item"], {
 				[styles["tab-item-active"]]: isActive,
 			})}
-			onClick={() => onSelect(tab.id)}
-			title={tab.filePath}
+			onClick={() => onSelect(filePath)}
+			title={filePath}
 		>
-			<span className={styles["tab-item-label"]}>
-				{tab.isDirty && <span className={styles["tab-item-dirty"]}>•</span>}
-				{tab.fileName}
-			</span>
+			<span className={styles["tab-item-label"]}>{fileName}</span>
 			{/* TODO: Avoid nesting button elements - refactor to prevent invalid HTML */}
 			<button
 				type="button"
 				className={styles["tab-item-close"]}
-				onClick={handleClose}
-				aria-label={`close ${tab.fileName}`}
+				onClick={() => onClose(filePath)}
+				aria-label={`close ${fileName}`}
 			>
 				×
 			</button>

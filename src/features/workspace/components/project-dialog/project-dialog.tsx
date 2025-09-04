@@ -2,8 +2,8 @@ import type { Dialog as ArkDialog } from "@ark-ui/react";
 import { Folder } from "lucide-react";
 import { useState } from "react";
 import { Dialog } from "@/components/dialog";
-import { useWorkspaceContext } from "@/contexts/workspace-context";
 import { createNewProject, openFolderDialog } from "@/libs/file";
+import { useEditorStore } from "@/stores";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const ProjectDialog = ({ open, onOpenChange }: Props) => {
-	const { setWorkspacePath } = useWorkspaceContext();
+	const { setWorkspacePath } = useEditorStore();
 
 	const [projectName, setProjectName] = useState("");
 	const [parentPath, setParentPath] = useState("");

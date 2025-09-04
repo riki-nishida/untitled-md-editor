@@ -1,8 +1,8 @@
 import { FolderOpen, Plus } from "lucide-react";
 import { useCallback } from "react";
 import { Menu } from "@/components/menu";
-import { useWorkspaceContext } from "@/contexts/workspace-context";
 import { openFolderDialog } from "@/libs/file";
+import { useEditorStore } from "@/stores";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const AppHeader = ({ onOpenDialog }: Props) => {
-	const { workspacePath, setWorkspacePath } = useWorkspaceContext();
+	const { workspacePath, setWorkspacePath } = useEditorStore();
 
 	const handleOpenFolder = useCallback(async () => {
 		const result = await openFolderDialog();

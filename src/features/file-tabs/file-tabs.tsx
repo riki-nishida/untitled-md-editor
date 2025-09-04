@@ -1,14 +1,27 @@
-import { useWorkspaceContext } from "@/contexts/workspace-context";
+import { useEditorStore } from "@/stores";
 import { TabItem } from "./components/tab-item/tab-item";
-import { useTabs } from "./hooks/use-tabs";
 import styles from "./styles.module.css";
 
 export const FileTabs = () => {
-	const { tabs, removeTab, setActiveTab } = useTabs();
+	const { openFilePaths, activeFilePath, setActiveFilePath, setOpenFilePaths } =
+		useEditorStore();
 
-	const { currentPath } = useWorkspaceContext();
+	const handleCloseTab = (path: string) => {
+		const newPaths = openFilePaths.filter((p) => p !== path);
+		setOpenFilePaths(newPaths);
 
-	if (tabs.length === 0) {
+		if (path !== activeFilePath) return;
+		if (newPaths.length === 0) {
+			setActiveFilePath(null);
+			return;
+		}
+
+		const index = openFilePaths.indexOf(path);
+		const newIndex = Math.min(index, newPaths.length - 1);
+		setActiveFilePath(newPaths[newIndex]);
+	};
+
+	if (openFilePaths.length === 0) {
 		return (
 			<div className={styles["tab-list-empty"]}>
 				<span className={styles["tab-list-empty-message"]}>No files open</span>
@@ -18,13 +31,13 @@ export const FileTabs = () => {
 
 	return (
 		<div className={styles["tab-list"]}>
-			{tabs.map((tab) => (
+			{openFilePaths.map((filePath) => (
 				<TabItem
-					key={tab.id}
-					tab={tab}
-					isActive={tab.filePath === currentPath}
-					onSelect={setActiveTab}
-					onClose={removeTab}
+					key={filePath}
+					filePath={filePath}
+					isActive={filePath === activeFilePath}
+					onSelect={setActiveFilePath}
+					onClose={handleCloseTab}
 				/>
 			))}
 		</div>
