@@ -10,14 +10,21 @@ type Props = {
 };
 
 export const AppHeader = ({ onOpenDialog }: Props) => {
-	const { workspacePath, setWorkspacePath } = useEditorStore();
+	const {
+		workspacePath,
+		setWorkspacePath,
+		setActiveFilePath,
+		setOpenFilePaths,
+	} = useEditorStore();
 
 	const handleOpenFolder = useCallback(async () => {
 		const result = await openFolderDialog();
 		if (!result) return;
 
 		setWorkspacePath(result);
-	}, [setWorkspacePath]);
+		setActiveFilePath(null);
+		setOpenFilePaths([]);
+	}, [setWorkspacePath, setActiveFilePath, setOpenFilePaths]);
 
 	const handleMenuSelect = useCallback(() => {
 		onOpenDialog();
